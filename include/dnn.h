@@ -442,6 +442,45 @@ void predict_softmax(const Eigen::MatrixXd& X, const Eigen::MatrixXd& y, std::ma
 	}
 	accuracy /= m;
 	std::cout << "Accuracy: " << accuracy << std::endl;
+	double macro_F1 =0 ;
+	double micro_F1 =0;
+	int FP_all = 0;
+	int FN_all = 0;
+	int TP_all = 0;
+	int TN_all = 0;
+	for (int k =0;k<3;++k){
+		int FP = 0;
+		int FN = 0;
+		int TP = 0;
+		int TN = 0;
+		for(int i =0 ;i<m;++i){
+			if (p(k,i) == 1 && y(k,i) == 1){
+				TP += 1;
+			}else if(p(k,i) == 1 && y(k,i) == 0){
+				FP += 1;
+			}else if(p(k,i) == 0 && y(k,i) == 1){
+				FN += 1;
+			}else{
+				TN += 1;
+			}
+		}
+		FP_all += FP; 
+		FN_all += FN;
+		TP_all += TP; 
+		TN_all += TN; 
+		double Recall = (double) TP/ (TP+FN);
+		double Precision = (double) TP/ (TP+FP);
+		macro_F1 += 2*Recall*Precision / (Recall + Precision)/3;
+		printf("Recall %.2F, Precision %.2f",Recall,Precision);
+	}
+	double Recall_all = (double) TP_all/ (TP_all+FN_all);
+	double Precision_all = (double) TP_all/ (TP_all+FP_all);
+	micro_F1 = 2*Recall_all*Precision_all/(Recall_all + Precision_all);
+	std::cout<<"macro_F1: "<<macro_F1<<std::endl;
+	std::cout<<"micro_F1: "<<micro_F1<<std::endl;
+	printf("%.2f",micro_F1);
+
+
 }
 
 

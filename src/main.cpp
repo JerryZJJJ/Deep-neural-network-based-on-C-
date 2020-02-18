@@ -561,20 +561,40 @@ int main()
 	// 		B(1,i) = 0;
 	// 		B(2,i) = 1;
 	// 	}
-	// }
+	// } 
 
 
+	// MatrixXd train_x = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/train_x_iris.csv");
+	// MatrixXd train_y = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/train_y_iris.csv");
+	// MatrixXd test_x = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/test_x_iris.csv");
+	// MatrixXd test_y = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/test_y_iris.csv");
 
+	// vector<int> layers_dims = { 3, 5, 5, 3 };// 5 - layer model
+	// map<string, MatrixXd> parameters;
+	// L_layer_model_softmax(train_x, train_y, layers_dims, 0.0075, 2000, true, parameters);
+	// MatrixXd prediction;
+	// predict_softmax(train_x, train_y, parameters, prediction);
+	// predict_softmax(test_x, test_y, parameters, prediction);
 
-	MatrixXd train_x = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/train_x_iris.csv");
-	MatrixXd train_y = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/train_y_iris.csv");
+	int m = 10;
+    Eigen::MatrixXd Ask1(m,1); 
+    Eigen::MatrixXd Bid_const(m,2);
+    MatrixXd E = MatrixXd::Random(m, 2);
+    MatrixXd F = MatrixXd::Random(m,1);
+	Bid_const = E;
+	Ask1 = F;
+    Eigen::MatrixXd beta;
+    beta = (Bid_const.transpose() * Bid_const).inverse() * Bid_const.transpose() * Ask1;
+	cout<<beta<<endl;
+	Eigen::MatrixXd y_hat = Bid_const * beta;
+    double y_mean = Ask1.mean();
+    double ss_fit = ((Ask1 - y_hat).transpose()*(Ask1 - y_hat))(0,0);
+	cout <<ss_fit<<endl;
 
-	vector<int> layers_dims = { 3, 5, 5, 3 };// 5 - layer model
-	map<string, MatrixXd> parameters;
-	L_layer_model_softmax(train_x, train_y, layers_dims, 0.0075, 1000, true, parameters);
-	MatrixXd prediction;
-	predict_softmax(train_x, train_y, parameters, prediction);
- 
+    double ss_mean = (((Eigen::MatrixXd)((Ask1.array() - y_mean)*(Ask1.array() - y_mean))).sum());
+    double r2 = (ss_mean - ss_fit)/ ss_mean;
+	cout<<r2<<endl; 
+  
 	// MatrixXd prediction2;
     // MatrixXd E = MatrixXd::Random(8, 20);
     // MatrixXd F = MatrixXd::Random(3, 20);
@@ -584,9 +604,9 @@ int main()
 	// cout <<prediction2<<endl; 
 	// MatrixXd test_x = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/test_x.csv");
 	// MatrixXd test_y = load_csv<MatrixXd>("./BackPropagationNeuralNetwork/CatData/test_y.csv");
-	cout << train_x.rows() << "*" << train_x.cols() << endl;
-	cout << train_y.rows() << "*" << train_y.cols() << endl;
-
+	// cout << train_x.rows() << "*" << train_x.cols() << endl; 
+	// cout << train_y.rows() << "*" << train_y.cols() << endl; 
+ 
 	// clock_t start, end;
 	// start = clock();
 
